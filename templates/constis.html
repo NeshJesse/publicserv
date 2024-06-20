@@ -21,6 +21,33 @@
             </div>
         </div>
     </nav>
+        <div class="max-w-md w-full bg-white p-6 rounded-lg shadow-lg">
+            <form id="filterForm" class="space-y-4">
+                <div class="flex flex-col space-y-2">
+                    <label for="countySelect" class="text-sm font-medium text-gray-700">County:</label>
+                    <select id="countySelect" class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500">
+                        <option value="">Select County</option>
+                        <!-- Options dynamically populated via JavaScript -->
+                    </select>
+                </div>
+    
+                <div class="flex flex-col space-y-2">
+                    <label for="constituencySelect" class="text-sm font-medium text-gray-700">Constituency:</label>
+                    <select id="constituencySelect" class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500">
+                        <option value="">Select Constituency</option>
+                        <!-- Options dynamically populated via JavaScript -->
+                    </select>
+                </div>
+    
+                <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Filter</button>
+            </form>
+    
+            <div id="resultsContainer" class="mt-6">
+                <!-- Filtered results displayed here -->
+            </div>
+        </div>
+    
+
 
     <!-- Constituencies List -->
     <div class="container mx-auto mt-20 px-4">
@@ -38,6 +65,8 @@
             {% endfor %}
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 
 </body>
 </html>

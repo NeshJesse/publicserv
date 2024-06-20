@@ -1,4 +1,4 @@
-from flask import Flask, render_template, g
+from flask import Flask,jsonify,request, render_template, g
 import sqlite3
 import json
 
@@ -43,6 +43,36 @@ def profile(profile_id):
     if profile:
         profile = {'name': profile[0], 'role': profile[1], 'description': profile[2], 'image': profile[3], 'socials': json.loads(profile[4])}
     return render_template('profile.html', profile=profile)
+
+
+@app.route('/counties')
+def get_counties():
+    conn = sqlite3.connect('pub_data.db')
+    cur = conn.cursor()
+    cur.execute('SELECT DISTINCT county FROM constituencies')
+    counties = [row[0] for row in cur.fetchall()]
+    conn.close()
+    return jsonify(counties)
+
+@app.route('/constituencies/<county>')
+def get_constituencies(county):
+    conn = sqlite3.connect('pub_data.db')
+    cur = conn.cursor()
+    cur.execute('SELECT constituency FROM constituencies WHERE county = ?', (county,))
+    constituencies = [row[0] for row in cur.fetchall()]
+    conn.close()
+    return jsonify(constituencies)
+
+@app.route('/filter')
+def filter_results():
+    county = request.args.get('county')
+    constituency = request.args.get('constituency')
+    conn = sqlite3.connect('pub_data.db')
+    cur = conn.cursor()
+    cur.execute('SELECT mp, county, constituency, image, party FROM constituencies WHERE county = ? AND constituency = ?', (county, constituency))
+    results = [{'mp': row[0], 'county': row[1], 'constituency': row[2], 'image': row[3], 'party': row[4]} for row in cur.fetchall()]
+    conn.close()
+    return jsonify(results)
 
 if __name__ == '__main__':
     app.run(debug=True)
