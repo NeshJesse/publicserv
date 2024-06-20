@@ -30,6 +30,10 @@
         <!-- Form Container -->
         <div class="max-w-md px-7 mt-16 mx-auto bg-white p-6 rounded-lg shadow-lg">
             <form id="filterForm" class="space-y-4">
+                <div class="text-2xl px-4">
+                    <p>115 VOTED NO</p>
+                    <p>204 VOTED YES</p>
+                </div>
                 <div class="flex flex-col space-y-2">
                     <label for="countySelect" class="text-sm font-medium text-gray-700">County:</label>
                     <select id="countySelect" class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500">
@@ -56,11 +60,8 @@
 
     <!-- Profile Cards - Block List Format -->
     <div class="container mx-auto mt-20 px-4">
-        <div class="text-2xl px-4">
-            <p>115 VOTED NO</p>
-            <p>204 VOTED YES</p>
-        </div>
-        </div>
+
+        
         {% for profile in profiles %}
         <a href="/profile/{{ profile.id }}" class="profile-card bg-white rounded-lg shadow-md p-6 block">
             <div class="card-image mb-4">
