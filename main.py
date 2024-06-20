@@ -4,7 +4,7 @@ import json
 
 app = Flask(__name__, template_folder="templates")
 
-DATABASE = 'mp_data.db'
+DATABASE = 'pub_data.db'
 
 def get_db():
     db = getattr(g, '_database', None)
@@ -17,6 +17,15 @@ def close_connection(exception):
     db = getattr(g, '_database', None)
     if db is not None:
         db.close()
+
+
+@app.route('/constis')
+def constituencies():
+    db = get_db()
+    cur = db.execute('SELECT county, code, constituency, mp, image, party, gps FROM constituencies')
+    constituencies = cur.fetchall()
+    constituencies = [{'county': row[0], 'code': row[1], 'constituency': row[2], 'mp': row[3], 'image': row[4], 'party': row[5], 'gps': json.loads(row[6])} for row in constituencies]
+    return render_template('constis.html', constituencies=constituencies)
 
 @app.route('/')
 def index():

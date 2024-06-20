@@ -2,10 +2,10 @@ import sqlite3
 import json
 
 def init_db():
-    conn = sqlite3.connect('public_data.db')
+    conn = sqlite3.connect('pub_data.db')
     c = conn.cursor()
     
-    # Create profiles table
+    # Create profiles table (include 'county' column)
     c.execute('''CREATE TABLE IF NOT EXISTS profiles (
                  id INTEGER PRIMARY KEY AUTOINCREMENT,
                  name TEXT NOT NULL,
@@ -16,7 +16,7 @@ def init_db():
                  county TEXT NOT NULL
              )''')
     
-    # Create constituencies table
+    # Create constituencies table (include 'gps' column)
     c.execute('''CREATE TABLE IF NOT EXISTS constituencies (
                  id INTEGER PRIMARY KEY AUTOINCREMENT,
                  county TEXT NOT NULL,
@@ -25,7 +25,8 @@ def init_db():
                  mp TEXT NOT NULL,
                  image TEXT NOT NULL,
                  party TEXT,
-                 desc TEXT NOT NULL
+                 desc TEXT NOT NULL,
+                 gps TEXT NOT NULL
              )''')
     
     # Load profiles data
@@ -39,8 +40,8 @@ def init_db():
         image = mp['image']
         county = mp['county']
         
-        c.execute('INSERT INTO profiles (name, role, description, image, county) VALUES (?, ?, ?, ?, ?)',
-                  (name, role, description, image, county))
+        c.execute('INSERT INTO profiles (name, role, description, image, socials, county) VALUES (?, ?, ?, ?, ?, ?)',
+                  (name, role, description, image, json.dumps(mp.get('socials', {})), county))
     
     # Load constituencies data
     with open('constituencies.json', 'r') as f:
@@ -53,10 +54,11 @@ def init_db():
             mp = details['mp']
             image = details['image']
             party = details.get('party', 'Unknown')  # Use 'Unknown' if 'party' key is missing
-            gps = json.dumps(details['gps'])
+            gps = json.dumps(details['gps'])  # Convert gps list to JSON string
+            desc = json.dumps(details)  # Store details as JSON string
             
-            c.execute('INSERT INTO constituencies (county, code, constituency, mp, image, party, gps) VALUES (?, ?, ?, ?, ?, ?, ?)',
-                      (county, code, constituency, mp, image, party, gps))
+            c.execute('INSERT INTO constituencies (county, code, constituency, mp, image, party, desc, gps) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                      (county, code, constituency, mp, image, party, desc, gps))
     
     conn.commit()
     conn.close()
