@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>Team Profile Cards</title>
+</head>
+<body class="font-roboto bg-gray-100">
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full bg-white shadow-md z-10">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="#" class="text-2xl font-semibold text-gray-800">Team Profiles</a>
+            <div>
+                <a href="#" class="text-gray-800 mx-2">Home</a>
+                <a href="#" class="text-gray-800 mx-2">About</a>
+                <a href="#" class="text-gray-800 mx-2">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Profile Cards -->
+    <div class="container mx-auto mt-20 flex flex-col gap-6 px-4">
+        {% for profile in profiles %}
+        <a href="{{ url_for('profile', profile_id=profile['id']) }}" class="card bg-white p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 flex items-center space-x-6">
+            <div class="card-image flex-shrink-0">
+                <img src="{{ url_for('static', filename='images/' ~ profile['image']) }}" alt="Profile image" class="w-24 h-24 rounded-full">
+            </div>
+            <div>
+                <p class="name text-xl font-semibold text-gray-800">{{ profile['name'] }}</p>
+                <p class="text-gray-600">{{ profile['role'] }}</p>
+                <p class="text-gray-600 mt-2">{{ profile['description'] }}</p>
+                <div class="socials flex mt-4 space-x-4">
+                    <button class="github text-gray-600"><i class="fab fa-github"></i></button>
+                    <button class="twitter text-gray-600"><i class="fab fa-twitter"></i></button>
+                    <button class="pinterest text-gray-600"><i class="fab fa-pinterest-p"></i></button>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+
+</body>
+</html>

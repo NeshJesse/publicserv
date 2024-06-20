@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>{{ profile.name }}</title>
+</head>
+<body class="font-roboto bg-gray-100">
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full bg-white shadow-md z-10">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="/" class="text-2xl font-semibold text-gray-800">Team Profiles</a>
+            <div>
+                <a href="/" class="text-gray-800 mx-2">Home</a>
+                <a href="#" class="text-gray-800 mx-2">About</a>
+                <a href="#" class="text-gray-800 mx-2">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Profile Detail -->
+    <div class="container mx-auto mt-20 p-4">
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="card-image mb-4 text-center">
+                <img src="{{ profile.image }}" alt="Profile image" class="w-32 h-32 rounded-full mx-auto">
+            </div>
+            <p class="name text-2xl font-semibold text-gray-800 text-center">{{ profile.name }}</p>
+            <p class="text-gray-600 text-center">{{ profile.role }}</p>
+            <p class="text-gray-600 mt-2 text-center">{{ profile.description }}</p>
+            <div class="socials flex justify-center mt-4 space-x-4">
+                {% for platform, link in profile.socials.items() %}
+                <a href="{{ link }}" class="text-gray-600"><i class="fab fa-{{ platform }}"></i></a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
