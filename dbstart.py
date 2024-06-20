@@ -2,18 +2,17 @@ import sqlite3
 import json
 
 def init_db():
-    conn = sqlite3.connect('pub_data.db')
+    conn = sqlite3.connect('profiles.db')
     c = conn.cursor()
     
     # Create profiles table (include 'county' column)
     c.execute('''CREATE TABLE IF NOT EXISTS profiles (
                  id INTEGER PRIMARY KEY AUTOINCREMENT,
                  name TEXT NOT NULL,
-                 role TEXT NOT NULL,
-                 description TEXT NOT NULL,
-                 image TEXT NOT NULL,
-                 socials TEXT NOT NULL,
-                 county TEXT NOT NULL
+                 county TEXT NOT NULL,
+                 constituency TEXT NOT NULL,
+                 party TEXT NOT NULL,
+                 image TEXT NOT NULL
              )''')
     
     # Create constituencies table (include 'gps' column)
@@ -35,13 +34,14 @@ def init_db():
     
     for mp in mps_data:
         name = mp['name']
-        role = mp['constituency']
-        description = f"County: {mp['county']}, Party: {mp['party']}"
-        image = mp['image']
         county = mp['county']
+        constituency = mp['constituency']
+        party = mp['party']
+        image = mp['image']
+
         
-        c.execute('INSERT INTO profiles (name, role, description, image, socials, county) VALUES (?, ?, ?, ?, ?, ?)',
-                  (name, role, description, image, json.dumps(mp.get('socials', {})), county))
+        c.execute('INSERT INTO profiles (name, constituency, county, party, image) VALUES (?, ?, ?, ?, ?)',
+                  (name, constituency, county, party, image))
     
     # Load constituencies data
     with open('constituencies.json', 'r') as f:
@@ -65,4 +65,3 @@ def init_db():
 
 if __name__ == '__main__':
     init_db()
-

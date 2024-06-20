@@ -4,7 +4,7 @@ import json
 
 app = Flask(__name__, template_folder="templates")
 
-DATABASE = 'pub_data.db'
+DATABASE = 'profiles.db'
 
 def get_db():
     db = getattr(g, '_database', None)
@@ -19,7 +19,7 @@ def close_connection(exception):
         db.close()
 
 
-@app.route('/constis')
+@app.route('/consti')
 def constituencies():
     db = get_db()
     cur = db.execute('SELECT county, code, constituency, mp, image, party, gps FROM constituencies')
@@ -30,35 +30,51 @@ def constituencies():
 @app.route('/')
 def index():
     db = get_db()
-    cur = db.execute('SELECT id, name, role, description, image, socials FROM profiles')
+    cur = db.execute('SELECT id, name, county,constituency, image ,party FROM profiles')
     profiles = cur.fetchall()
-    profiles = [{'id': row[0], 'name': row[1], 'role': row[2], 'description': row[3], 'image': row[4], 'socials': json.loads(row[5])} for row in profiles]
+    profiles = [{'id': row[0], 'name': row[1], 'county': row[2], 'constituency': row[3], 'image': row[4],'party': row[5]} for row in profiles]
     return render_template('index.html', profiles=profiles)
+
+@app.route('/profile/<int:profile_id>')
+def profiled(profile_id):
+    db = get_db()
+    cur = db.execute('SELECT name, county,constituency, party, image FROM profiles WHERE id = ?', (profile_id,))
+    profile = cur.fetchone()
+    if profile:
+        profile = {'name': profile[0], 'county': profile[1], 'constituency': profile[2], 'image': profile[3], 'party': profile[4]}
+    return render_template('profile.html', profile=profile)
+
 
 @app.route('/profile/<int:profile_id>')
 def profile(profile_id):
     db = get_db()
-    cur = db.execute('SELECT name, role, description, image, socials FROM profiles WHERE id = ?', (profile_id,))
-    profile = cur.fetchone()
-    if profile:
-        profile = {'name': profile[0], 'role': profile[1], 'description': profile[2], 'image': profile[3], 'socials': json.loads(profile[4])}
-    return render_template('profile.html', profile=profile)
+    cur = db.execute('SELECT name, county, constituency,  image, party FROM profiles WHERE id = ?', (profile_id,))
+    profile = cur.fetchone()  
+    profile = {
+            'name': profile[0],
+            'county': profile[1],
+            'constituency': profile[2],
+            'image': profile[3],
+            'party': profile[4]
+        }
+    return render_template('profile_detail.html', profile=profile)
+
 
 
 @app.route('/counties')
 def get_counties():
-    conn = sqlite3.connect('pub_data.db')
+    conn = sqlite3.connect('profiles.db')
     cur = conn.cursor()
-    cur.execute('SELECT DISTINCT county FROM constituencies')
+    cur.execute('SELECT DISTINCT county FROM profiles')
     counties = [row[0] for row in cur.fetchall()]
     conn.close()
     return jsonify(counties)
 
 @app.route('/constituencies/<county>')
 def get_constituencies(county):
-    conn = sqlite3.connect('pub_data.db')
+    conn = sqlite3.connect('profiles.db')
     cur = conn.cursor()
-    cur.execute('SELECT constituency FROM constituencies WHERE county = ?', (county,))
+    cur.execute('SELECT constituency FROM profiles WHERE county = ?', (county,))
     constituencies = [row[0] for row in cur.fetchall()]
     conn.close()
     return jsonify(constituencies)
@@ -67,10 +83,10 @@ def get_constituencies(county):
 def filter_results():
     county = request.args.get('county')
     constituency = request.args.get('constituency')
-    conn = sqlite3.connect('pub_data.db')
+    conn = sqlite3.connect('profiles.db')
     cur = conn.cursor()
-    cur.execute('SELECT mp, county, constituency, image, party FROM constituencies WHERE county = ? AND constituency = ?', (county, constituency))
-    results = [{'mp': row[0], 'county': row[1], 'constituency': row[2], 'image': row[3], 'party': row[4]} for row in cur.fetchall()]
+    cur.execute('SELECT name, county, constituency, image, party FROM profiles WHERE county = ? AND constituency = ?', (county, constituency))
+    results = [{'name': row[0], 'county': row[1], 'constituency': row[2], 'image': row[3], 'party': row[4]} for row in cur.fetchall()]
     conn.close()
     return jsonify(results)
 

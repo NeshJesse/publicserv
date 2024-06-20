@@ -7,6 +7,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <title>Team Profile Cards</title>
+    <style>
+        .profile-card {
+            max-width: 40rem; /* Adjust max-width to make it wider */
+            margin-bottom: 1rem; /* Add margin-bottom for spacing between cards */
+        }
+    </style>
 </head>
 <body class="font-roboto bg-gray-100">
 
@@ -21,25 +27,59 @@
             </div>
         </div>
     </nav>
-
-    <!-- Profile Cards -->
-    <div class="container mx-auto mt-20 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-4">
-        {% for profile in profiles %}
-        <a href="/profile/{{ profile.id }}" class="card bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
-            <div class="card-image mb-4">
-                <img src="{{ profile.image }}" alt="Profile image" class="w-full rounded-full">
+        <!-- Form Container -->
+        <div class="max-w-md px-7 mt-16 mx-auto bg-white p-6 rounded-lg shadow-lg">
+            <form id="filterForm" class="space-y-4">
+                <div class="flex flex-col space-y-2">
+                    <label for="countySelect" class="text-sm font-medium text-gray-700">County:</label>
+                    <select id="countySelect" class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500">
+                        <option value="">Select County</option>
+                        <!-- Options dynamically populated via JavaScript -->
+                    </select>
+                </div>
+    
+                <div class="flex flex-col space-y-2">
+                    <label for="constituencySelect" class="text-sm font-medium text-gray-700">Constituency:</label>
+                    <select id="constituencySelect" class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500">
+                        <option value="">Select Constituency</option>
+                        <!-- Options dynamically populated via JavaScript -->
+                    </select>
+                </div>
+    
+                <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Filter</button>
+            </form>
+    
+            <div id="resultsContainer" class="mt-6">
+                <!-- Filtered results displayed here -->
             </div>
-            <p class="name text-xl font-semibold text-gray-800">{{ profile.name }}</p>
-            <p class="text-gray-600">{{ profile.role }}</p>
-            <p class="text-gray-600 mt-2">{{ profile.description }}</p>
-            <div class="socials flex mt-4 space-x-4">
-                {% for platform, link in profile.socials.items() %}
-                <a href="{{ link }}" class="text-gray-600"><i class="fab fa-{{ platform }}"></i></a>
-                {% endfor %}
+        </div>
+
+    <!-- Profile Cards - Block List Format -->
+    <div class="container mx-auto mt-20 px-4">
+        <div class="text-2xl px-4">
+            <p>115 VOTED NO</p>
+            <p>204 VOTED YES</p>
+        </div>
+        </div>
+        {% for profile in profiles %}
+        <a href="/profile/{{ profile.id }}" class="profile-card bg-white rounded-lg shadow-md p-6 block">
+            <div class="card-image mb-4">
+                <img src="{{ profile.image }}" alt="Profile image" class="w-32 h-32 rounded-full mx-auto">
+            </div>
+            <div class="text-center">
+                <p class="name text-xl font-semibold text-gray-800">{{ profile.name }}</p>
+                <p class="text-gray-600">County :{{ profile.county }}</p>
+                <p class="text-gray-600 mt-2">Constituency :{{ profile.constituency }}</p>
+                <p class="text-gray-600 mt-2">Party Affiliate :{{ profile.party }}</p>
+
             </div>
         </a>
         {% endfor %}
     </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 </body>
 </html>
+
+
+

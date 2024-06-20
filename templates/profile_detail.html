@@ -21,19 +21,20 @@
             </div>
         </div>
     </nav>
-
-    <!-- Profile Detail -->
-    <div class="container mx-auto mt-20 p-4">
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <div class="card-image mb-4 text-center">
-                <img src="{{ profile.image }}" alt="Profile image" class="w-32 h-32 rounded-full mx-auto">
-            </div>
-            <p class="name text-2xl font-semibold text-gray-800 text-center">{{ profile.name }}</p>
-            <p class="text-gray-600 text-center">{{ profile.county }}</p>
-            <p class="text-gray-600 mt-2 text-center">{{ profile.constituency }}</p>
-            <p class="text-gray-600 mt-2 text-center">{{ profile.party }}</p>
+<!-- Profile Detail -->
+<div class="container mx-auto mt-20 p-4">
+    <a href="/profile/{{ profile.id }}">
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <div class="card-image mb-4 text-center">
+            <img src="{{ profile.image }}" alt="Profile image" class="w-32 h-32 rounded-full mx-auto">
         </div>
+        <p class="name text-2xl font-semibold text-gray-800 text-center">{{ profile.name }}</p>
+        <p class="text-gray-600 text-center">{{ profile.county}}</p>
+        <p class="text-gray-600 mt-2 text-center">{{ profile.constituency }}</p>
+        <p class="text-gray-600 mt-2 text-center">{{ profile.party }}</p>
     </div>
+    </a>
 
+</div>
 </body>
 </html>

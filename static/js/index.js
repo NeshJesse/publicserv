@@ -73,9 +73,9 @@ document.addEventListener('DOMContentLoaded', function () {
             resultDiv.classList.add('bg-white', 'p-6', 'rounded-lg', 'shadow-md', 'cursor-pointer', 'mb-4');
             resultDiv.innerHTML = `
             <a href="/profile/{{ profile.id }}" class="profile-card bg-white rounded-lg shadow-md p-6 block">
-                <h3 class="text-xl font-semibold text-gray-800">${result.mp}</h3>
+                <h3 class="text-xl font-semibold text-gray-800">${result.name}</h3>
                 <p class="text-gray-600">County: ${result.county}, Constituency: ${result.constituency}</p>
-                <img src="${result.image}" alt="${result.mp} photo" class="w-32 h-32 rounded-full mx-auto mt-4">
+                <img src="${result.image}" alt="${result.name} photo" class="w-32 h-32 rounded-full mx-auto mt-4">
                 <p class="text-gray-600 mt-2">Party: ${result.party}</p>
             </a>
             `;
