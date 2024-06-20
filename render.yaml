@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: publicserv
+    runtime: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn app:app"
+    envVars:
+      - key: SECRET_KEY
+        value: your-secret-key
+      - key: DATABASE_URL
+        value: sqlite:///profiles.db
+
