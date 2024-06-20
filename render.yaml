@@ -3,7 +3,7 @@ services:
     name: publicserv
     runtime: python
     buildCommand: "pip install -r requirements.txt"
-    startCommand: "gunicorn app:app"
+    startCommand: "gunicorn main:app"
     envVars:
       - key: SECRET_KEY
         value: your-secret-key
